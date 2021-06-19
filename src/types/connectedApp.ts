@@ -10,12 +10,15 @@ export interface ConnectedApp extends MetadataInfo {
 }
 
 export interface ConnectedAppOAuthConfig {
+  consumerKey?: string;
   callbackUrl: string;
   certificate: string;
   isAdminApproved: boolean;
+  isConsumerSecretOptional: boolean;
   scopes: string[];
 }
 
 export interface ConnectedAppOAuthPolicy {
   ipRelaxation: string;
+  refreshTokenPolicy: string;
 }

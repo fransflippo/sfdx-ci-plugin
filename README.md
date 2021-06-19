@@ -23,6 +23,7 @@ After this, you can connect to the org with a single command:
 [![License](https://img.shields.io/npm/l/ci.svg)](https://github.com/fransflippo/sfdx-ci-plugin/blob/master/package.json)
 
 <!-- toc -->
+
 <!-- tocstop -->
 
 <!-- install -->
@@ -30,20 +31,27 @@ After this, you can connect to the org with a single command:
 <!-- usage -->
 ```sh-session
 $ npm install -g sfdx-ci-plugin
-$ sfdx ci:setup
-Generating 2048-bit key-pair...... OK!
-Generating self-signed certificate...... OK!
-Permission set "Continuous Integration" doesn't exist; creating... OK!
-Creating connected app...... OK!
+$ sfdx COMMAND
+running command...
+$ sfdx (-v|--version|version)
+sfdx-ci-plugin/0.0.1 darwin-x64 node-v13.2.0
+$ sfdx --help [COMMAND]
+USAGE
+  $ sfdx COMMAND
+...
 ```
 <!-- usagestop -->
 
 <!-- commands -->
 * [`sfdx ci:setup [-n <string>] [-p <string>] [-f] [-c <filepath>] [-d <directory>] [-u <string>] [--apiversion <string>] [--json] [--loglevel trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL]`](#sfdx-cisetup--n-string--p-string--f--c-filepath--d-directory--u-string---apiversion-string---json---loglevel-tracedebuginfowarnerrorfataltracedebuginfowarnerrorfatal)
 
+## `sfdx ci:setup [-n <string>] [-p <string>] [-f] [-c <filepath>] [-d <directory>] [-u <string>] [--apiversion <string>] [--json] [--loglevel trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL]`
+
 Sets up an org as the target of a continuous integration pipeline
 
 ```
+Sets up an org as the target of a continuous integration pipeline
+
 USAGE
   $ sfdx ci:setup [-n <string>] [-p <string>] [-f] [-c <filepath>] [-d <directory>] [-u <string>] [--apiversion 
   <string>] [--json] [--loglevel trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL]
