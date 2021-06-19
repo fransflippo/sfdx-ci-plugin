@@ -1,0 +1,14 @@
+{
+  "ok": "OK!",
+  "failed": "Failed.",
+  "commandDescription": "Sets up an org as the target of a continuous integration pipeline",
+  "nameFlagDescription": "name of the connected app to create",
+  "permissionsetnameFlagDescription": "name of the permission set that will determine which users have access to the connected app. If not provided, the permission set will have the same name as the connected app. In either case, the permission set is created if it doesn't exist yet.",
+  "forceFlagDescription": "overwrite an existing connected app",
+  "certfileFlagDescription": "path to the X.509 certificate to configure the connected app to use for authentication",
+  "outputdirFlagDescription": "path to which the X.509 certificate and private key file will be written",
+  "errorConnectedAppExists": "An existing connected app with name '%s' exists. Re-run with -f to replace it.",
+  "generatingKeyPair": "Generating 2048-bit key-pair...",
+  "generatingSelfSignedCert": "Generating self-signed certificate...",
+  "creatingConnectedApp": "Creating connected app..."
+}
