@@ -1,44 +1,49 @@
-ci
+sfdx-ci-plugin
 ==
 
-Configure orgs for continuous integration and deployment
+SFDX plugin to set up a connected app usable for continuous integration with "one click".
 
-[![Version](https://img.shields.io/npm/v/ci.svg)](https://npmjs.org/package/ci)
-[![CircleCI](https://circleci.com/gh/fransflippo/sfdx-ci-plugin/tree/master.svg?style=shield)](https://circleci.com/gh/fransflippo/sfdx-ci-plugin/tree/master)
-[![Appveyor CI](https://ci.appveyor.com/api/projects/status/github/fransflippo/sfdx-ci-plugin?branch=master&svg=true)](https://ci.appveyor.com/project/heroku/sfdx-ci-plugin/branch/master)
+This plugin simplifies the process of creating a connected app that you can use with `sfdx auth:jwt:grant`
+to non-interactively connect SFDX to a sandbox or production org so that you can deploy your SFDX project.
+It:
+- creates an RSA private key and an X.509 certificate
+- creates a permission set that controls access to the connected app
+- creates the connected app and configures it with the X.509 certificate for digital signatures and connects it
+  to the permission set
+
+After this, you can connect to the org with a single command:
+
+    sfdx auth:jwt:grant -u user@example.org -f privkey.pem -i <OAuth client id>
+
+
+[![Version](https://img.shields.io/npm/v/sfdx-ci-plugin.svg)](https://npmjs.org/package/sfdx-ci-plugin)
 [![Codecov](https://codecov.io/gh/fransflippo/sfdx-ci-plugin/branch/master/graph/badge.svg)](https://codecov.io/gh/fransflippo/sfdx-ci-plugin)
-[![Greenkeeper](https://badges.greenkeeper.io/fransflippo/sfdx-ci-plugin.svg)](https://greenkeeper.io/)
 [![Known Vulnerabilities](https://snyk.io/test/github/fransflippo/sfdx-ci-plugin/badge.svg)](https://snyk.io/test/github/fransflippo/sfdx-ci-plugin)
-[![Downloads/week](https://img.shields.io/npm/dw/ci.svg)](https://npmjs.org/package/ci)
+[![Downloads/week](https://img.shields.io/npm/dw/ci.svg)](https://npmjs.org/package/sfdx-ci-plugin)
 [![License](https://img.shields.io/npm/l/ci.svg)](https://github.com/fransflippo/sfdx-ci-plugin/blob/master/package.json)
 
 <!-- toc -->
-* [Debugging your plugin](#debugging-your-plugin)
 <!-- tocstop -->
+
 <!-- install -->
+
 <!-- usage -->
 ```sh-session
 $ npm install -g sfdx-ci-plugin
-$ sfdx COMMAND
-running command...
-$ sfdx (-v|--version|version)
-sfdx-ci-plugin/0.0.1 darwin-x64 node-v13.2.0
-$ sfdx --help [COMMAND]
-USAGE
-  $ sfdx COMMAND
-...
+$ sfdx ci:setup
+Generating 2048-bit key-pair...... OK!
+Generating self-signed certificate...... OK!
+Permission set "Continuous Integration" doesn't exist; creating... OK!
+Creating connected app...... OK!
 ```
 <!-- usagestop -->
+
 <!-- commands -->
 * [`sfdx ci:setup [-n <string>] [-p <string>] [-f] [-c <filepath>] [-d <directory>] [-u <string>] [--apiversion <string>] [--json] [--loglevel trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL]`](#sfdx-cisetup--n-string--p-string--f--c-filepath--d-directory--u-string---apiversion-string---json---loglevel-tracedebuginfowarnerrorfataltracedebuginfowarnerrorfatal)
 
-## `sfdx ci:setup [-n <string>] [-p <string>] [-f] [-c <filepath>] [-d <directory>] [-u <string>] [--apiversion <string>] [--json] [--loglevel trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL]`
-
 Sets up an org as the target of a continuous integration pipeline
 
 ```
-Sets up an org as the target of a continuous integration pipeline
-
 USAGE
   $ sfdx ci:setup [-n <string>] [-p <string>] [-f] [-c <filepath>] [-d <directory>] [-u <string>] [--apiversion 
   <string>] [--json] [--loglevel trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL]
@@ -81,27 +86,3 @@ EXAMPLES
 
 _See code: [lib/commands/ci/setup.js](https://github.com/fransflippo/sfdx-ci-plugin/blob/v0.0.1/lib/commands/ci/setup.js)_
 <!-- commandsstop -->
-<!-- debugging-your-plugin -->
-# Debugging your plugin
-We recommend using the Visual Studio Code (VS Code) IDE for your plugin development. Included in the `.vscode` directory of this plugin is a `launch.json` config file, which allows you to attach a debugger to the node process when running your commands.
-
-To debug the `hello:org` command: 
-1. Start the inspector
-  
-If you linked your plugin to the sfdx cli, call your command with the `dev-suspend` switch: 
-```sh-session
-$ sfdx hello:org -u myOrg@example.com --dev-suspend
-```
-  
-Alternatively, to call your command using the `bin/run` script, set the `NODE_OPTIONS` environment variable to `--inspect-brk` when starting the debugger:
-```sh-session
-$ NODE_OPTIONS=--inspect-brk bin/run hello:org -u myOrg@example.com
-```
-
-2. Set some breakpoints in your command code
-3. Click on the Debug icon in the Activity Bar on the side of VS Code to open up the Debug view.
-4. In the upper left hand corner of VS Code, verify that the "Attach to Remote" launch configuration has been chosen.
-5. Hit the green play button to the left of the "Attach to Remote" launch configuration window. The debugger should now be suspended on the first line of the program. 
-6. Hit the green play button at the top middle of VS Code (this play button will be to the right of the play button that you clicked in step #5).
-<br><img src=".images/vscodeScreenshot.png" width="480" height="278"><br>
-Congrats, you are debugging!
