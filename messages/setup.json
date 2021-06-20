@@ -8,7 +8,12 @@
   "certfileFlagDescription": "path to the X.509 certificate to configure the connected app to use for authentication",
   "outputdirFlagDescription": "path to which the X.509 certificate and private key file will be written",
   "errorConnectedAppExists": "An existing connected app with name '%s' exists. Re-run with -f to replace it.",
-  "generatingKeyPair": "Generating 2048-bit key-pair...",
-  "generatingSelfSignedCert": "Generating self-signed certificate...",
-  "creatingConnectedApp": "Creating connected app..."
+  "generatingKeyPair": "Generating 2048-bit key-pair",
+  "generatingSelfSignedCert": "Generating self-signed certificate",
+  "creatingConnectedApp": "Creating connected app",
+  "connectedAppExists": "Connected app \"%s\" already exists. Please choose a different name.",
+  "assigningPermissionSet": "Assigning permission set \"%s\" to \"%s\"",
+  "writingPrivateKey": "Writing private key to %s",
+  "writingCertificate": "Writing certificate to %s",
+  "alreadyExists": "already exists."
 }

@@ -34,7 +34,7 @@ $ npm install -g sfdx-ci-plugin
 $ sfdx COMMAND
 running command...
 $ sfdx (-v|--version|version)
-sfdx-ci-plugin/0.0.1 darwin-x64 node-v13.2.0
+sfdx-ci-plugin/0.0.1 darwin-x64 node-v15.4.0
 $ sfdx --help [COMMAND]
 USAGE
   $ sfdx COMMAND
