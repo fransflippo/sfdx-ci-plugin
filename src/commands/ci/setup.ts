@@ -74,7 +74,8 @@ export default class Setup extends SfdxCommand {
     // Generate the certificate and private key and write to files
     let certificateAndPrivateKey: CertificateAndPrivateKey;
     if (certfile != null) {
-      const certificatePem = await fs.readFile(certfile);
+      const buffer = await fs.readFile(certfile);
+      const certificatePem = buffer.toString();
       certificateAndPrivateKey = new CertificateAndPrivateKey(certificatePem);
     } else {
       certificateAndPrivateKey = await certificateGenerator.generateCertificateAndPrivateKey({
@@ -119,19 +120,18 @@ export default class Setup extends SfdxCommand {
         }
       });
     // Assign permission set to current user
-    await this.org.getConnection().identity().then(identityInfo => {
-      const userId = identityInfo.user_id;
-      this.ux.startSpinner(chalk.whiteBright(messages.getMessage('assigningPermissionSet', [ permissionSetName, identityInfo.username ])));
-      permissionSetHelper
-        .assignPermissionSet(this.org, permissionSetName, userId)
-        .catch(e => {
-          this.ux.stopSpinner(chalk.red(messages.getMessage('failed')));
-          throw e;
-        })
-        .then(() => {
-          this.ux.stopSpinner(chalk.green(messages.getMessage('ok')));
-        });
-    });
+    const identityInfo = await this.org.getConnection().identity();
+    const userId = identityInfo.user_id;
+    this.ux.startSpinner(chalk.whiteBright(messages.getMessage('assigningPermissionSet', [ permissionSetName, identityInfo.username ])));
+    await permissionSetHelper
+      .assignPermissionSet(this.org, permissionSetName, userId)
+      .catch(e => {
+        this.ux.stopSpinner(chalk.red(messages.getMessage('failed')));
+        throw e;
+      })
+      .then(() => {
+        this.ux.stopSpinner(chalk.green(messages.getMessage('ok')));
+      });
 
     // Create the ConnectedApp
     this.ux.startSpinner(chalk.whiteBright(messages.getMessage('creatingConnectedApp')));
@@ -174,6 +174,7 @@ export default class Setup extends SfdxCommand {
     // Return an object to be displayed with --json
     return {
       connectedAppName,
+      permissionSetName,
       consumerKey,
       certificatePem: certificateAndPrivateKey.certificatePem,
       privateKeyPem: certificateAndPrivateKey.privateKeyPem
