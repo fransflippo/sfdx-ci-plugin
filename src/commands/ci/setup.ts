@@ -63,7 +63,7 @@ export default class Setup extends SfdxCommand {
 
     // Check that connected app doesn't already exist
     let deleteExistingConnectedApp = false;
-    if (connectedAppHelper.connectedAppExists(this.org, connectedAppName)) {
+    if (await connectedAppHelper.connectedAppExists(this.org, connectedAppName)) {
       if (this.flags.force) {
         deleteExistingConnectedApp = true;  // We'll only delete it right before creating the new one
       } else {

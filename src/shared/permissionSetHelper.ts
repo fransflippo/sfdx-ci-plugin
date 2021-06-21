@@ -1,5 +1,5 @@
 import {Org} from '@salesforce/core';
-import {SaveErrorResult} from '../types/metadata';
+import {SaveError} from 'jsforce';
 import {PermissionSet} from '../types/permissionSet';
 import {toApiName} from './sfdx-utils';
 
@@ -44,11 +44,10 @@ export class PermissionSetHelper {
       throw new Error('Expected a single SaveResult but got: ' + saveResult);
     }
     if (!saveResult.success) {
-      const errorResult = saveResult as SaveErrorResult;
-      if (Array.isArray(errorResult.errors)) {
-        throw new Error(errorResult.errors.map(error => error.fields + ': ' + error.message).join('\n'));
+      if (Array.isArray(saveResult.errors)) {
+        throw new Error(saveResult.errors.map(error => error.fields + ': ' + error.message).join('\n'));
       } else {
-        throw new Error(errorResult.errors.fields + ': ' + errorResult.errors.message);
+        throw new Error((saveResult.errors as SaveError).fields + ': ' + (saveResult.errors as SaveError).message);
       }
     }
     return true;

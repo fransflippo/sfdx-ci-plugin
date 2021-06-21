@@ -1,7 +1,6 @@
 import {Org} from '@salesforce/core';
 import {SaveResult} from 'jsforce';
 import {ConnectedApp} from '../types/connectedApp';
-import {SaveErrorResult} from '../types/metadata';
 import {toApiName} from './sfdx-utils';
 
 export class ConnectedAppHelper {
@@ -58,7 +57,9 @@ export class ConnectedAppHelper {
           fullName: connectedAppName,
           success: false,
           errors: {
-            message: error.toString()
+            fields: '',
+            message: error.toString(),
+            statusCode: ''
           }
         };
       });
@@ -66,11 +67,10 @@ export class ConnectedAppHelper {
       throw new Error('Expected a single SaveResult but got: ' + saveResult);
     }
     if (!saveResult.success) {
-      const errorResult = saveResult as SaveErrorResult;
-      if (Array.isArray(errorResult.errors)) {
-        throw new Error(errorResult.errors.map(error => error.fields + ': ' + error.message).join('\n'));
+      if (Array.isArray(saveResult.errors)) {
+        throw new Error(saveResult.errors.map(error => error.fields + ': ' + error.message).join('\n'));
       } else {
-        throw new Error(errorResult.errors.fields + ': ' + errorResult.errors.message);
+        throw new Error(saveResult.errors.fields + ': ' + saveResult.errors.message);
       }
     }
 

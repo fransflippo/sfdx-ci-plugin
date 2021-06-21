@@ -23,7 +23,7 @@ export class CertificateGenerator {
    * to files in PEM format.
    * @returns {string}
    */
-  public async generateCertificateAndPrivateKey(callback: GenerateCertificateCallback): Promise<CertificateAndPrivateKey> {
+  public async generateCertificateAndPrivateKey(callback?: GenerateCertificateCallback): Promise<CertificateAndPrivateKey> {
     const pki = forge.pki;
 
     // Create key pair
