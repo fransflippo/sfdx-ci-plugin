@@ -2,11 +2,11 @@ import { flags, SfdxCommand } from '@salesforce/command';
 import {fs, Messages, Org, SfdxError} from '@salesforce/core';
 import {AnyJson} from '@salesforce/ts-types';
 import chalk from 'chalk';
-import {CertificateAndPrivateKey} from '../../shared/certificateGenerator';
-import certificateGenerator from '../../shared/certificateGenerator';
-import connectedAppHelper from '../../shared/connectedAppHelper';
-import permissionSetHelper from '../../shared/permissionSetHelper';
-import { toApiName } from '../../shared/sfdx-utils';
+import {CertificateAndPrivateKey} from '../../helpers/certificateGenerator';
+import certificateGenerator from '../../helpers/certificateGenerator';
+import connectedAppHelper from '../../helpers/connectedAppHelper';
+import permissionSetHelper from '../../helpers/permissionSetHelper';
+import { toApiName } from '../../helpers/sfdx-utils';
 
 // Initialize Messages with the current plugin directory
 Messages.importMessagesDirectory(__dirname);
@@ -60,10 +60,11 @@ export default class Setup extends SfdxCommand {
     const permissionSetName: string = this.flags.permissionsetname || connectedAppName;
     const certfile: string = this.flags.certfile;
     const outputdir = this.flags.outputdir;
+    const connection = this.org.getConnection();
 
     // Check that connected app doesn't already exist
     let deleteExistingConnectedApp = false;
-    if (await connectedAppHelper.connectedAppExists(this.org, connectedAppName)) {
+    if (await connectedAppHelper.connectedAppExists(connection, connectedAppName)) {
       if (this.flags.force) {
         deleteExistingConnectedApp = true;  // We'll only delete it right before creating the new one
       } else {
@@ -107,7 +108,7 @@ export default class Setup extends SfdxCommand {
     // Create the permission set, if needed
     this.ux.startSpinner(chalk.whiteBright(`Creating permission set "${permissionSetName}"`));
     await permissionSetHelper
-      .createPermissionSet(this.org, permissionSetName, connectedAppName)
+      .createPermissionSet(connection, permissionSetName, connectedAppName)
       .catch(e => {
         this.ux.stopSpinner(chalk.red(messages.getMessage('failed')));
         throw e;
@@ -124,7 +125,7 @@ export default class Setup extends SfdxCommand {
     const userId = identityInfo.user_id;
     this.ux.startSpinner(chalk.whiteBright(messages.getMessage('assigningPermissionSet', [ permissionSetName, identityInfo.username ])));
     await permissionSetHelper
-      .assignPermissionSet(this.org, permissionSetName, userId)
+      .assignPermissionSet(connection, permissionSetName, userId)
       .catch(e => {
         this.ux.stopSpinner(chalk.red(messages.getMessage('failed')));
         throw e;
@@ -136,7 +137,7 @@ export default class Setup extends SfdxCommand {
     // Create the ConnectedApp
     this.ux.startSpinner(chalk.whiteBright(messages.getMessage('creatingConnectedApp')));
     const consumerKey = await connectedAppHelper
-      .createConnectedApp(this.org, connectedAppName, permissionSetName, certificateAndPrivateKey.certificatePem, deleteExistingConnectedApp)
+      .createConnectedApp(connection, connectedAppName, permissionSetName, certificateAndPrivateKey.certificatePem, deleteExistingConnectedApp)
       .catch(e => {
         this.ux.stopSpinner(chalk.red(messages.getMessage('failed')));
         throw e;

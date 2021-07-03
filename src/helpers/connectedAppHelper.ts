@@ -1,27 +1,25 @@
-import {Org} from '@salesforce/core';
+import {Connection} from '@salesforce/core';
 import {SaveResult} from 'jsforce';
 import {ConnectedApp} from '../types/connectedApp';
 import {toApiName} from './sfdx-utils';
 
 export class ConnectedAppHelper {
 
-  public async connectedAppExists(org: Org, connectedAppName: string): Promise<boolean> {
-    const connection = org.getConnection();
+  public async connectedAppExists(connection: Connection, connectedAppName: string): Promise<boolean> {
     const readResult = await connection.metadata.read('ConnectedApp', toApiName(connectedAppName));
     return (!Array.isArray(readResult) && readResult.fullName !== undefined);
   }
 
   /**
    * Creates a connected app
-   * @param {Org} org the org on which to create the connected app
+   * @param {Connection} connection the connection on which to create the connected app
    * @param {string} connectedAppName the display name of the connected app
    * @param {string} permissionSetName the display name of the permission set that will control access to the connected app
    * @param {string} certificatePem the certificate that will be used to verify digital signatures
    * @param {boolean} replaceExistingConnectedApp whether to replace an existing connected app with the same name
    * @returns {Promise<string>} the new connected app's consumer id (OAuth client id)
    */
-  public async createConnectedApp(org: Org, connectedAppName: string, permissionSetName: string, certificatePem: string, replaceExistingConnectedApp: boolean): Promise<string> {
-    const connection = org.getConnection();
+  public async createConnectedApp(connection: Connection, connectedAppName: string, permissionSetName: string, certificatePem: string, replaceExistingConnectedApp: boolean): Promise<string> {
     const fullName = toApiName(connectedAppName);
 
     if (replaceExistingConnectedApp) {

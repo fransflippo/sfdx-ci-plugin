@@ -1,4 +1,4 @@
-import {Org} from '@salesforce/core';
+import {Connection} from '@salesforce/core';
 import {SaveError} from 'jsforce';
 import {PermissionSet} from '../types/permissionSet';
 import {toApiName} from './sfdx-utils';
@@ -7,15 +7,13 @@ export class PermissionSetHelper {
 
   /**
    * Creates a permission set
-   * @param {Org} org the org on which to create the permission set
+   * @param {Connection} connection the connection on which to create the permission set
    * @param {string} permissionSetName
    * @param {string} connectedAppName the connected app that the permission set will give access to: used to add a
    *                                  meaningful description to the permission set
    * @returns {Promise<boolean>} true if the permission set was created, false if it already existed
    */
-  public async createPermissionSet(org: Org, permissionSetName: string, connectedAppName: string): Promise<boolean> {
-    const connection = org.getConnection();
-
+  public async createPermissionSet(connection: Connection, permissionSetName: string, connectedAppName: string): Promise<boolean> {
     // Check whether the permission set already exists
     const permissionSetApiName = toApiName(permissionSetName);
     const permissionSetCountResults = await connection.query(`SELECT COUNT() FROM PermissionSet WHERE Name = '${permissionSetApiName}'`);
@@ -55,19 +53,17 @@ export class PermissionSetHelper {
 
   /**
    * Assigns the permission set with the given name to a user
-   * @param {Org} org the Salesforce org on which to assign the permission set
+   * @param {Connection} connection the connection on which to assign the permission set
    * @param {string} permissionSetName the name of the permission set tot assign. Will be translated to an API name
    *                                   using the standard rules for label-to-API-name translation
    * @param {string} userId the id (not username) of the user to assign the permission set to
    * @returns {Promise<void>}
    */
-  public async assignPermissionSet(org: Org, permissionSetName: string, userId: string) {
+  public async assignPermissionSet(connection: Connection, permissionSetName: string, userId: string) {
     interface PermissionSetRecord {
       Id: string;
       Name: string;
     }
-
-    const connection = org.getConnection();
 
     // Find the permission set id
     const permissionSetResults = await connection.query<PermissionSetRecord>(`SELECT Id, Name from PermissionSet WHERE Name = '${toApiName(permissionSetName)}'`);
