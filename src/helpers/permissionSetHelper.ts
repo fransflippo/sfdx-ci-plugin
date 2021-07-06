@@ -9,14 +9,14 @@ export class PermissionSetHelper {
    * Creates a permission set
    * @param {Connection} connection the connection on which to create the permission set
    * @param {string} permissionSetName
-   * @param {string} connectedAppName the connected app that the permission set will give access to: used to add a
-   *                                  meaningful description to the permission set
+   * @param {string} description description to assign the the permission set
    * @returns {Promise<boolean>} true if the permission set was created, false if it already existed
    */
-  public async createPermissionSet(connection: Connection, permissionSetName: string, connectedAppName: string): Promise<boolean> {
+  public async createPermissionSet(connection: Connection, permissionSetName: string, description: string): Promise<boolean> {
     // Check whether the permission set already exists
     const permissionSetApiName = toApiName(permissionSetName);
-    const permissionSetCountResults = await connection.query(`SELECT COUNT() FROM PermissionSet WHERE Name = '${permissionSetApiName}'`);
+    const promise = connection.query(`SELECT COUNT() FROM PermissionSet WHERE Name = '${permissionSetApiName}'`);
+    const permissionSetCountResults = await promise;
     if (permissionSetCountResults.totalSize > 0) {
       return false;
     }
@@ -25,7 +25,7 @@ export class PermissionSetHelper {
     const permissionSet: PermissionSet = {
       fullName: toApiName(permissionSetName),
       label: permissionSetName,
-      description: `Permission set for the ${connectedAppName} connected app`
+      description
     };
     const saveResult = await connection.metadata
       .create('PermissionSet', permissionSet)
@@ -79,7 +79,7 @@ export class PermissionSetHelper {
         if (error.name === 'DUPLICATE_VALUE') {
           // Ignore: we just want to make sure the assignment is there, and apparently it is.
         } else {
-          throw new Error(error);
+          throw new Error(error.message);
         }
       });
   }

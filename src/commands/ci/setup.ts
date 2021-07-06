@@ -108,7 +108,7 @@ export default class Setup extends SfdxCommand {
     // Create the permission set, if needed
     this.ux.startSpinner(chalk.whiteBright(`Creating permission set "${permissionSetName}"`));
     await permissionSetHelper
-      .createPermissionSet(connection, permissionSetName, connectedAppName)
+      .createPermissionSet(connection, permissionSetName, `Permission set for the ${connectedAppName} connected app`)
       .catch(e => {
         this.ux.stopSpinner(chalk.red(messages.getMessage('failed')));
         throw e;

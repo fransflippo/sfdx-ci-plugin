@@ -4924,6 +4924,13 @@ tslint-microsoft-contrib@^5.2.1:
   dependencies:
     tsutils "^2.27.2 <2.29.0"
 
+tslint-no-unused-expression-chai@^0.1.4:
+  version "0.1.4"
+  resolved "https://registry.yarnpkg.com/tslint-no-unused-expression-chai/-/tslint-no-unused-expression-chai-0.1.4.tgz#f4a2c9dd3306088f44eb7574cf470082b09ade49"
+  integrity sha512-frEWKNTcq7VsaWKgUxMDOB2N/cmQadVkUtUGIut+2K4nv/uFXPfgJyPjuNC/cHyfUVqIkHMAvHOCL+d/McU3nQ==
+  dependencies:
+    tsutils "^3.0.0"
+
 tslint@^5, tslint@^5.18.0:
   version "5.20.1"
   resolved "https://registry.npmjs.org/tslint/-/tslint-5.20.1.tgz"
@@ -4957,7 +4964,7 @@ tsutils@^2.29.0:
   dependencies:
     tslib "^1.8.1"
 
-tsutils@^3.17.1:
+tsutils@^3.0.0, tsutils@^3.17.1:
   version "3.21.0"
   resolved "https://registry.npmjs.org/tsutils/-/tsutils-3.21.0.tgz"
   integrity sha512-mHKK3iUXL+3UF6xL5k0PEhKRUBKPBCv/+RkEOpjRWxxx27KKRBmmA60A9pgOUvMi8GKhRMPEmjBRPzs2W7O1OA==
