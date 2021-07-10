@@ -6,7 +6,6 @@ import Metadata = require('jsforce/lib/api/metadata');
 import sinon = require('sinon');
 import sinonChai = require('sinon-chai');
 import connectedAppHelper from '../../src/helpers/connectedAppHelper';
-chai.should();
 chai.use(sinonChai);
 chai.use(chaiAsPromised);
 

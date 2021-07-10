@@ -5,7 +5,6 @@ import * as forge from 'node-forge';
 import sinon = require('sinon');
 import sinonChai = require('sinon-chai');
 import certificateGenerator from '../../src/helpers/certificateGenerator';
-chai.should();
 chai.use(sinonChai);
 chai.use(chaiAsPromised);
 

@@ -9,7 +9,6 @@ import {QueryResult} from 'jsforce/query';
 import sinon = require('sinon');
 import sinonChai = require('sinon-chai');
 import permissionSetHelper from '../../src/helpers/permissionSetHelper';
-chai.should();
 chai.use(sinonChai);
 chai.use(chaiAsPromised);
 

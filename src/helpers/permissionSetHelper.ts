@@ -1,7 +1,6 @@
 import {Connection} from '@salesforce/core';
-import {SaveError} from 'jsforce';
 import {PermissionSet} from '../types/permissionSet';
-import {toApiName} from './sfdx-utils';
+import {handleSaveResultError, toApiName} from './sfdx-utils';
 
 export class PermissionSetHelper {
 
@@ -34,7 +33,9 @@ export class PermissionSetHelper {
           fullName: permissionSetName,
           success: false,
           errors: {
-            message: error.toString()
+            fields: '',
+            message: error.toString(),
+            statusCode: ''
           }
         };
       });
@@ -42,11 +43,7 @@ export class PermissionSetHelper {
       throw new Error('Expected a single SaveResult but got: ' + saveResult);
     }
     if (!saveResult.success) {
-      if (Array.isArray(saveResult.errors)) {
-        throw new Error(saveResult.errors.map(error => error.fields + ': ' + error.message).join('\n'));
-      } else {
-        throw new Error((saveResult.errors as SaveError).fields + ': ' + (saveResult.errors as SaveError).message);
-      }
+      handleSaveResultError(saveResult);
     }
     return true;
   }

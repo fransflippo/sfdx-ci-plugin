@@ -1,7 +1,7 @@
 import {Connection} from '@salesforce/core';
 import {SaveResult} from 'jsforce';
 import {ConnectedApp} from '../types/connectedApp';
-import {toApiName} from './sfdx-utils';
+import {handleSaveResultError, toApiName} from './sfdx-utils';
 
 export class ConnectedAppHelper {
 
@@ -65,11 +65,7 @@ export class ConnectedAppHelper {
       throw new Error('Expected a single SaveResult but got: ' + saveResult);
     }
     if (!saveResult.success) {
-      if (Array.isArray(saveResult.errors)) {
-        throw new Error(saveResult.errors.map(error => error.fields + ': ' + error.message).join('\n'));
-      } else {
-        throw new Error(saveResult.errors.fields + ': ' + saveResult.errors.message);
-      }
+      handleSaveResultError(saveResult);
     }
 
     // Get the new connected app's client id
