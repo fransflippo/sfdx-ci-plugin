@@ -17,7 +17,7 @@ export interface GenerateCertificateCallback {
   onGenerateCertificate?: (certificatePem: string) => Promise<void>;
 }
 
-export class CertificateGenerator {
+class CertificateGenerator {
   /**
    * Generates a private key and a certificate signed with that key and writes both
    * to files in PEM format.

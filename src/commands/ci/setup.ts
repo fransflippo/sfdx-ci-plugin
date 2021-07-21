@@ -81,7 +81,7 @@ export default class Setup extends SfdxCommand {
     } else {
       certificateAndPrivateKey = await certificateGenerator.generateCertificateAndPrivateKey({
         beforeGeneratePrivateKey: async function() {
-          this.ux.startSpinner(chalk.whiteBright(messages.getMessage('generatingKeyPair')));
+          this.ux.startSpinner(messages.getMessage('generatingKeyPair'));
         }.bind(this),
         onGeneratePrivateKey: async function(privateKeyPem: string) {
           this.ux.stopSpinner(chalk.green(messages.getMessage('ok')));
@@ -92,7 +92,7 @@ export default class Setup extends SfdxCommand {
           this.ux.stopSpinner(chalk.green(messages.getMessage('ok')));
         }.bind(this),
         beforeGenerateCertificate: async function() {
-          this.ux.startSpinner(chalk.whiteBright(messages.getMessage('generatingSelfSignedCert')));
+          this.ux.startSpinner(messages.getMessage('generatingSelfSignedCert'));
         }.bind(this),
         onGenerateCertificate: async function(certificatePem: string) {
           this.ux.stopSpinner(chalk.green(messages.getMessage('ok')));
@@ -106,7 +106,7 @@ export default class Setup extends SfdxCommand {
     }
 
     // Create the permission set, if needed
-    this.ux.startSpinner(chalk.whiteBright(`Creating permission set "${permissionSetName}"`));
+    this.ux.startSpinner(`Creating permission set "${permissionSetName}"`);
     await permissionSetHelper
       .createPermissionSet(connection, permissionSetName, `Permission set for the ${connectedAppName} connected app`)
       .catch(e => {
@@ -123,7 +123,7 @@ export default class Setup extends SfdxCommand {
     // Assign permission set to current user
     const identityInfo = await this.org.getConnection().identity();
     const userId = identityInfo.user_id;
-    this.ux.startSpinner(chalk.whiteBright(messages.getMessage('assigningPermissionSet', [ permissionSetName, identityInfo.username ])));
+    this.ux.startSpinner(messages.getMessage('assigningPermissionSet', [ permissionSetName, identityInfo.username ]));
     await permissionSetHelper
       .assignPermissionSet(connection, permissionSetName, userId)
       .catch(e => {
@@ -135,7 +135,7 @@ export default class Setup extends SfdxCommand {
       });
 
     // Create the ConnectedApp
-    this.ux.startSpinner(chalk.whiteBright(messages.getMessage('creatingConnectedApp')));
+    this.ux.startSpinner(messages.getMessage('creatingConnectedApp'));
     const consumerKey = await connectedAppHelper
       .createConnectedApp(connection, connectedAppName, permissionSetName, certificateAndPrivateKey.certificatePem, deleteExistingConnectedApp)
       .catch(e => {
@@ -148,7 +148,7 @@ export default class Setup extends SfdxCommand {
       });
 
     const loginUrl = this.org.getField(Org.Fields.LOGIN_URL).toString();
-    this.ux.log(chalk.bold(chalk.whiteBright('\nCongratulations! Your connected app is ready for use. To connect, use the following command:\n')));
+    this.ux.log(chalk.bold('\nCongratulations! Your connected app is ready for use. To connect, use the following command:\n'));
     this.ux.log(
       chalk.yellowBright('    sfdx') +
       chalk.green(' auth:jwt:grant') +
@@ -156,20 +156,20 @@ export default class Setup extends SfdxCommand {
       chalk.cyan(' -f ') + chalk.magenta(`${outputdir}/${keyOutFile}`) +
       chalk.cyan(' -i ') + chalk.magenta(consumerKey) +
       chalk.cyan(' -r ') + chalk.magenta(loginUrl));
-    this.ux.log(chalk.bold(chalk.whiteBright('\nWe\'ve gone ahead and assigned ')) +
-      chalk.magenta(this.org.getUsername()) + chalk.bold(chalk.whiteBright(' to the ')) +
-      chalk.magenta(permissionSetName)  + chalk.bold(chalk.whiteBright(' permission set,'))
+    this.ux.log(chalk.bold('\nWe\'ve gone ahead and assigned ') +
+      chalk.magenta(this.org.getUsername()) + chalk.bold(' to the ') +
+      chalk.magenta(permissionSetName)  + chalk.bold(' permission set,')
     );
-    this.ux.log(chalk.bold(chalk.whiteBright('but if you want to connect as another user, e.g. otheruser@example.org, you can give them access to')));
-    this.ux.log(chalk.bold(chalk.whiteBright('the connected app by assigning the permission set using:\n')));
+    this.ux.log(chalk.bold('but if you want to connect as another user, e.g. otheruser@example.org, you can give them access to'));
+    this.ux.log(chalk.bold('the connected app by assigning the permission set using:\n'));
     this.ux.log(
       chalk.yellowBright('    sfdx') +
       chalk.green(' force:user:permset:assign') +
       chalk.cyan(' -n ') + chalk.magenta(toApiName(permissionSetName)) +
       chalk.cyan(' -o ') + chalk.magenta('otheruser@example.org'));
-    this.ux.log(chalk.bold(chalk.whiteBright('\nYou\'ll want to store the ' + chalk.magentaBright(`${outputdir}/${keyOutFile}`) + chalk.whiteBright(' private key in your continuous integration tool\'s'))));
-    this.ux.log(chalk.bold(chalk.whiteBright('secrets (e.g. Jenkins\'s "Credentials"), or encrypt it using a third-party tool like Ansible Vault')));
-    this.ux.log(chalk.bold(chalk.whiteBright('and store the third party tool\'s encryption key in your continuous integration tool\'s secrets.')));
+    this.ux.log(chalk.bold('\nYou\'ll want to store the ' + chalk.magentaBright(`${outputdir}/${keyOutFile}` + ' private key in your continuous integration tool\'s')));
+    this.ux.log(chalk.bold('secrets (e.g. Jenkins\'s "Credentials"), or encrypt it using a third-party tool like Ansible Vault'));
+    this.ux.log(chalk.bold('and store the third party tool\'s encryption key in your continuous integration tool\'s secrets.'));
     this.ux.log(chalk.bold(chalk.yellowBright(chalk.underline('\nMake sure you don\'t check the private key in to version control in clear text!\n'))));
 
     // Return an object to be displayed with --json
