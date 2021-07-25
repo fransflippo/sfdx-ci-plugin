@@ -13,7 +13,7 @@ Messages.importMessagesDirectory(__dirname);
 
 // Load the specific messages for this file. Messages from @salesforce/command, @salesforce/core,
 // or any library that is using the messages framework can also be loaded this way.
-const messages = Messages.loadMessages('sfdx-ci-plugin', 'setup');
+const messages = Messages.loadMessages('@assisisolutions/sfdx-ci-plugin', 'setup');
 
 const certOutFile = 'cert.pem';
 const keyOutFile = 'server.key';
