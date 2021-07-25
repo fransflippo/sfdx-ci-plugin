@@ -1,7 +1,7 @@
 {
   "name": "@assisisolutions/sfdx-ci-plugin",
   "description": "SFDX plugin to set up a connected app usable for continuous integration with \"one click\"",
-  "version": "1.0.0",
+  "version": "0.0.1",
   "author": "Frans Flippo",
   "bugs": "https://github.com/fransflippo/sfdx-ci-plugin/issues",
   "dependencies": {
@@ -13,6 +13,7 @@
     "@salesforce/ts-sinon": "^1.3.18",
     "jsforce": "^1.10.0",
     "node-forge": "0.10.0",
+    "np": "^7.5.0",
     "tslib": "^1"
   },
   "devDependencies": {
