@@ -34,7 +34,7 @@ $ npm install -g @assisisolutions/sfdx-ci-plugin
 $ sfdx COMMAND
 running command...
 $ sfdx (-v|--version|version)
-@assisisolutions/sfdx-ci-plugin/1.0.0 darwin-x64 node-v15.4.0
+@assisisolutions/sfdx-ci-plugin/1.0.1 darwin-x64 node-v15.4.0
 $ sfdx --help [COMMAND]
 USAGE
   $ sfdx COMMAND
@@ -92,5 +92,5 @@ EXAMPLES
   $ sfdx ci:setup --targetusername myOrg@example.com --certfile mycert.pem
 ```
 
-_See code: [lib/commands/ci/setup.js](https://github.com/fransflippo/sfdx-ci-plugin/blob/v1.0.0/lib/commands/ci/setup.js)_
+_See code: [lib/commands/ci/setup.js](https://github.com/fransflippo/sfdx-ci-plugin/blob/v1.0.1/lib/commands/ci/setup.js)_
 <!-- commandsstop -->
