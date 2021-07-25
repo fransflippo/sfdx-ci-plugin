@@ -1,5 +1,5 @@
 {
-  "name": "sfdx-ci-plugin",
+  "name": "@assisisolutions/sfdx-ci-plugin",
   "description": "SFDX plugin to set up a connected app usable for continuous integration with \"one click\"",
   "version": "1.0.0",
   "author": "Frans Flippo",
@@ -56,7 +56,10 @@
   ],
   "homepage": "https://github.com/fransflippo/sfdx-ci-plugin",
   "keywords": [
-    "sfdx-plugin"
+    "salesforce",
+    "sfdx",
+    "sfdx-plugin",
+    "ci"
   ],
   "license": "MIT",
   "oclif": {
