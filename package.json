@@ -4,6 +4,9 @@
   "version": "0.0.1",
   "author": "Frans Flippo",
   "bugs": "https://github.com/fransflippo/sfdx-ci-plugin/issues",
+  "publishConfig": {
+    "access": "public"
+  },
   "dependencies": {
     "@oclif/command": "^1",
     "@oclif/config": "^1",
