@@ -12,33 +12,36 @@ export class PermissionSetHelper {
    * @returns {Promise<boolean>} true if the permission set was created, false if it already existed
    */
   public async createPermissionSet(connection: Connection, permissionSetName: string, description: string): Promise<boolean> {
-    // Check whether the permission set already exists
     const permissionSetApiName = toApiName(permissionSetName);
-    const promise = connection.query(`SELECT COUNT() FROM PermissionSet WHERE Name = '${permissionSetApiName}'`);
-    const permissionSetCountResults = await promise;
-    if (permissionSetCountResults.totalSize > 0) {
-      return false;
-    }
 
     // Permission set doesn't exist yet, create
     const permissionSet: PermissionSet = {
-      fullName: toApiName(permissionSetName),
+      fullName: permissionSetApiName,
       label: permissionSetName,
       description
     };
     const saveResult = await connection.metadata
       .create('PermissionSet', permissionSet)
       .catch(error => {
-        return {
-          fullName: permissionSetName,
-          success: false,
-          errors: {
-            fields: '',
-            message: error.toString(),
-            statusCode: ''
-          }
-        };
+        if (error.name === 'DUPLICATE_VALUE') {
+          // Permission set already exists, return false
+          return false;
+        } else {
+          // Synthesize a SaveResult that contains the error information so that all errors are handled in the same way
+          return {
+            fullName: permissionSetApiName,
+            success: false,
+            errors: {
+              fields: '',
+              message: error.toString(),
+              statusCode: ''
+            }
+          };
+        }
       });
+    if (saveResult === false) {
+      return false;
+    }
     if (Array.isArray(saveResult)) {
       throw new Error('Expected a single SaveResult but got: ' + saveResult);
     }

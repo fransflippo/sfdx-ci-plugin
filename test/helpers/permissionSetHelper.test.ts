@@ -21,9 +21,6 @@ describe('PermissionSetHelper', () => {
       const metadataStub = sinon.createStubInstance<Metadata>(Metadata);
       const metadata = metadataStub as unknown as Metadata;
       connection.metadata = metadata;
-      const query = Promise.resolve({ totalSize: 0 }) as Query<QueryResult<object>>;
-      // Not great, if we change one letter in our query, the test will fail...
-      connectionStub.query.withArgs("SELECT COUNT() FROM PermissionSet WHERE Name = 'My_Permissions'").returns(query);
       metadata.create.withArgs('PermissionSet', sinon.match.any).returns(Promise.resolve({
         success: true,
         fullName: 'My_Permissions'
@@ -40,27 +37,23 @@ describe('PermissionSetHelper', () => {
         description: 'This is my permission set'
       });
     });
-    it('shouldn\'t create a permission set if it already exists', async () => {
+    it('should ignore the error if a permission set already exists', async () => {
       // Given
       const connectionStub = sinon.createStubInstance(Connection);
       const connection = connectionStub as unknown as Connection;
       const metadataStub = sinon.createStubInstance<Metadata>(Metadata);
       const metadata = metadataStub as unknown as Metadata;
       connection.metadata = metadata;
-      const query = Promise.resolve({ totalSize: 1 }) as Query<QueryResult<object>>;
-      // Not great, if we change one letter in our query, the test will fail...
-      connectionStub.query.withArgs("SELECT COUNT() FROM PermissionSet WHERE Name = 'My_Permissions'").returns(query);
-      metadata.create.withArgs('PermissionSet', sinon.match.any).returns(Promise.resolve({
-        success: true,
-        fullName: 'My_Permissions'
-      }));
+      const error = new Error();
+      error.name = 'DUPLICATE_VALUE';
+      metadata.create.withArgs('PermissionSet', sinon.match.any).returns(Promise.reject(error));
 
       // When
       const created = await permissionSetHelper.createPermissionSet(connection, 'My Permissions', 'This is my permission set');
 
       // Then
       expect(created).to.be.false;
-      expect(metadata.create).to.not.have.been.called;
+      expect(metadata.create).to.have.been.called;
     });
     it('should throw an error result if creating a permission set fails', async () => {
       // Given
