@@ -1,4 +1,5 @@
 import {Connection} from '@salesforce/core';
+import {SaveError} from 'jsforce';
 import {PermissionSet} from '../types/permissionSet';
 import {handleSaveResultError, toApiName} from './sfdx-utils';
 
@@ -23,32 +24,39 @@ export class PermissionSetHelper {
     const saveResult = await connection.metadata
       .create('PermissionSet', permissionSet)
       .catch(error => {
-        if (error.name === 'DUPLICATE_VALUE') {
-          // Permission set already exists, return false
-          return false;
-        } else {
-          // Synthesize a SaveResult that contains the error information so that all errors are handled in the same way
-          return {
-            fullName: permissionSetApiName,
-            success: false,
-            errors: {
-              fields: '',
-              message: error.toString(),
-              statusCode: ''
-            }
-          };
-        }
+        // Synthesize a SaveResult that contains the error information so that all errors are handled in the same way
+        return {
+          fullName: permissionSetApiName,
+          success: false,
+          errors: {
+            fields: '',
+            message: error.toString(),
+            statusCode: ''
+          }
+        };
       });
-    if (saveResult === false) {
-      return false;
-    }
     if (Array.isArray(saveResult)) {
       throw new Error('Expected a single SaveResult but got: ' + saveResult);
     }
+    if (saveResult.success) {
+      return true;
+    }
+    let errors: SaveError[];
+    if (!Array.isArray(saveResult.errors)) {
+      errors = [saveResult.errors as SaveError];
+    } else {
+      errors = saveResult.errors as SaveError[];
+    }
+    for (const i in errors) {
+      if (errors[i].statusCode === 'DUPLICATE_DEVELOPER_NAME') {
+        // Duplicate API name: we can safely ignore this
+        return false;
+      }
+    }
+    // Report error
     if (!saveResult.success) {
       handleSaveResultError(saveResult);
     }
-    return true;
   }
 
   /**

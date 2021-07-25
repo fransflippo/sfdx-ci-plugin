@@ -274,7 +274,20 @@ the connected app by assigning the permission set using:
       connectionIdentityStub.resolves({ user_id: userId, username } as IdentityInfo);
       const error = new Error();
       error.name = 'DUPLICATE_VALUE';
-      metadataCreateStub.withArgs('PermissionSet', { fullName: 'Continuous_Integration', label: 'Continuous Integration', description: 'Permission set for the Continuous Integration connected app'}).rejects(error);
+      metadataCreateStub.withArgs('PermissionSet', { fullName: 'Continuous_Integration', label: 'Continuous Integration', description: 'Permission set for the Continuous Integration connected app'}).resolves({
+        success: false,
+        errors: [
+          {
+            fields: 'Label',
+            message: 'The label you entered is in use. Enter a unique label.',
+            statusCode: 'DUPLICATE_MASTER_LABEL'
+          }, {
+            fields: 'Label',
+            message: 'The API name you entered is already in use. Enter a unique API name.',
+            statusCode: 'DUPLICATE_DEVELOPER_NAME'
+          }
+        ]
+      });
       connectionQueryStub.withArgs("SELECT Id, Name from PermissionSet WHERE Name = 'Continuous_Integration'").resolves({ done: true, totalSize: 1, records: [ { Id: 'PermissionSetId' } ]});
       // eslint-disable-next-line @typescript-eslint/ban-ts-ignore
       // @ts-ignore

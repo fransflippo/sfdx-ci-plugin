@@ -44,9 +44,20 @@ describe('PermissionSetHelper', () => {
       const metadataStub = sinon.createStubInstance<Metadata>(Metadata);
       const metadata = metadataStub as unknown as Metadata;
       connection.metadata = metadata;
-      const error = new Error();
-      error.name = 'DUPLICATE_VALUE';
-      metadata.create.withArgs('PermissionSet', sinon.match.any).returns(Promise.reject(error));
+      metadata.create.withArgs('PermissionSet', sinon.match.any).returns(Promise.resolve({
+        success: false,
+        errors: [
+          {
+            fields: 'Label',
+            message: 'The label you entered is in use. Enter a unique label.',
+            statusCode: 'DUPLICATE_MASTER_LABEL'
+          }, {
+            fields: 'Label',
+            message: 'The API name you entered is already in use. Enter a unique API name.',
+            statusCode: 'DUPLICATE_DEVELOPER_NAME'
+          }
+        ]
+      }));
 
       // When
       const created = await permissionSetHelper.createPermissionSet(connection, 'My Permissions', 'This is my permission set');
